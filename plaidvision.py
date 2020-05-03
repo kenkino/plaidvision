@@ -26,6 +26,7 @@ import imageio
 import numpy as np
 import pygame
 import scipy.misc
+from PIL import Image
 
 # for backwards compat with opencv 2.x
 CAP_PROP_FRAME_WIDTH = 3
@@ -208,7 +209,7 @@ class Model:
 
     def classify(self, img, top_n=5):
         if img.shape != self.shape:
-            img = scipy.misc.imresize(img, self.shape).astype(float)
+            img = np.array(Image.fromarray(img).resize((int(self.shape[1]),int(self.shape[0])), resample=0)).astype(float)
         data = np.expand_dims(img, axis=0)
         data = self.preprocess_input(data)
         predictions = self.model.predict(data)
